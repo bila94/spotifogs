@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   const handleGetDiscogsData = async () => {
     if (!playlistData) return;
 
-    const tracks = playlistData.tracks.items.map((item: any) => item.track.name);
+    const tracks = playlistData.tracks.items.map((item: any) => item.track.album.name);
     try {
       const response = await axios.post('/api/getDiscogsData', { tracks });
       setAlbumsData(response.data);
@@ -30,24 +30,26 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <h1>Spotify to Discogs</h1>
-      <input
+      <h1 className='p-5 text-2xl'>Spotify to Discogs</h1>
+      <input 
+        className='mx-10 px-5'
         type="text"
         placeholder="Enter Spotify Playlist Link"
         value={playlistLink}
         onChange={(e) => setPlaylistLink(e.target.value)}
       />
-      <button onClick={handleGetPlaylist}>Fetch Playlist</button>
+      <button className='btn' onClick={handleGetPlaylist}>Fetch Playlist</button>
 
       {playlistData && (
-        <div>
+        <div className='p-5'>
           <h2>Playlist: {playlistData.name}</h2>
+          <h2>By: {playlistData.owner.display_name}</h2>
           <button onClick={handleGetDiscogsData}>Find Albums on Discogs</button>
         </div>
       )}
 
       {albumsData && (
-        <div>
+        <div className='p-5'>
           <h2>Albums on Discogs</h2>
           <ul>
             {Object.keys(albumsData).map(album => (

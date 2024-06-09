@@ -16,6 +16,17 @@
   }
 }
 
+input {
+  background: grey;
+  width: 50rem;
+}
+
+button {
+  background: lime;
+  padding: 10px;
+  color: black
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
