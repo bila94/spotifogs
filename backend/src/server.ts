@@ -40,6 +40,8 @@ app.post('/api/getPlaylist', async (req: Request, res: Response) => {
       }
     });
     res.json(playlistResponse.data);
+    console.log(playlistResponse.data.tracks.items)
+    playlistResponse.data.tracks.items.forEach((song: any) => {console.log(song.track.album)})
   } catch (error) {
     console.error('Error fetching playlist:', error);
     res.status(500).send('Error fetching playlist');
@@ -48,20 +50,24 @@ app.post('/api/getPlaylist', async (req: Request, res: Response) => {
 
 app.post('/api/getDiscogsData', async (req: Request, res: Response) => {
   const { tracks } = req.body;
+  console.log("🦊: ~ app.post ~ req.body: ", req.body)
+  
   let albums: { [key: string]: { count: number; link: string; price: string | null } } = {};
 
   try {
+    console.log(tracks)
     for (const track of tracks) {
-      const searchResponse = await axios.get(`https://api.discogs.com/database/search?q=${track}&type=release&key=${discogsConsumerKey}&secret=${discogsConsumerSecret}`);
-      const results = searchResponse.data.results;
+      const searchResponse = await axios.get(`https://api.discogs.com/database/search?page=1&per_page=1&q=${track}&type=release&key=${discogsConsumerKey}&secret=${discogsConsumerSecret}`);
+      const result = searchResponse.data.results;
 
-      results.forEach((result: any) => {
-        const albumTitle = result.title;
+      console.log("🦊: ~ app.post ~ results: ", result[0].title)
+      
+        let albumTitle = result[0].title;
         if (!albums[albumTitle]) {
-          albums[albumTitle] = { count: 0, link: result.uri, price: null };
+          albums[albumTitle] = { count: 0, link: result[0].uri, price: null};
         }
         albums[albumTitle].count++;
-      });
+
     }
     res.json(albums);
   } catch (error) {
