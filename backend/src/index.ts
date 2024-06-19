@@ -1,11 +1,10 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
 import querystring from 'querystring';
 require('@dotenvx/dotenvx').config();
 import rateLimit from 'express-rate-limit';
 import NodeCache from 'node-cache';
 import cors from 'cors'
-
 
 const app = express();
 const port = process.env.PORT || 8888;
@@ -46,17 +45,19 @@ async function getSpotifyAccessToken(): Promise<string> {
   return response.data.access_token;
 }
 
-app.post('/api/getPlaylist', async (req: Request, res: Response) => {
+app.post('/api/getPlaylist', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { playlistLink } = req.body;
 
   if (!playlistLink) {
-    return res.status(400).send('Playlist link is required');
+    res.status(400).send('Playlist link is required');
+    return;
   }
 
   const playlistId = playlistLink.split('/playlist/')[1]?.split('?')[0];
 
   if (!playlistId) {
-    return res.status(400).send('Invalid playlist link format');
+    res.status(400).send('Invalid playlist link format');
+    return;
   }
 
   try {
@@ -102,12 +103,13 @@ async function fetchWithRetry(url: string, options: any, retries: number = 5, de
   }
 }
 
-app.post('/api/getDiscogsData', async (req: Request, res: Response) => {
+app.post('/api/getDiscogsData', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { tracks } = req.body;
   console.log("🦊: ~ app.post ~ req.body: ", req.body);
 
   if (!tracks || !Array.isArray(tracks)) {
-    return res.status(400).send('Tracks must be provided as an array');
+    res.status(400).send('Tracks must be provided as an array');
+    return;
   }
 
   let albums: { [key: string]: AlbumData } = {};
