@@ -12,6 +12,7 @@ const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
 app.use(cors())
 app.use(express.json());
+console.log("in express")
 
 app.get("/", (req: Request, res: Response) => {
   res.send({"spotify": "toDiscogs💿💿💿"})
