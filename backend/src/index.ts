@@ -4,12 +4,19 @@ import querystring from 'querystring';
 require('@dotenvx/dotenvx').config();
 import rateLimit from 'express-rate-limit';
 import NodeCache from 'node-cache';
+import cors from 'cors'
+
 
 const app = express();
 const port = process.env.PORT || 8888;
 const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
+app.use(cors())
 app.use(express.json());
+
+app.get("/", (req: Request, res: Response) => {
+  res.send({"spotify": "toDiscogs💿💿💿"})
+})
 
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID as string;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET as string;
