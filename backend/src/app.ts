@@ -24,7 +24,7 @@ app.use(express.json());
 console.log("in express")
 
 app.get("/", (req: Request, res: Response) => {
-  res.send({"spotify": "toDiscogs💿💿💿"})
+  res.send({"spotify": "toDiscogs💿💿💿💿"})
 })
 
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID as string;
