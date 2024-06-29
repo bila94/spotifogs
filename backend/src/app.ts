@@ -11,9 +11,6 @@ require('@dotenvx/dotenvx').config();
 import * as middlewares from './middlewares';
 import api from './api';
 
-
-
-
 const app = express();
 const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
@@ -55,7 +52,7 @@ async function getSpotifyAccessToken(): Promise<string> {
   return response.data.access_token;
 }
 
-app.post('/api/getPlaylist', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+app.post('/api/getPlaylist', async (req: Request, res: Response): Promise<void> => {
   const { playlistLink } = req.body;
 
   if (!playlistLink) {
@@ -99,7 +96,7 @@ interface AlbumData {
   image: string | null;
 }
 
-// Exponential backoff retry mechanism
+// Exponential backoff retry 
 async function fetchWithRetry(url: string, options: any, retries: number = 5, delay: number = 1000): Promise<any> {
   try {
     return await axios.get(url, options);
@@ -113,7 +110,7 @@ async function fetchWithRetry(url: string, options: any, retries: number = 5, de
   }
 }
 
-app.post('/api/getDiscogsData', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+app.post('/api/getDiscogsData', async (req: Request, res: Response): Promise<void> => {
   const { tracks } = req.body;
   console.log("🦊: ~ app.post ~ req.body: ", req.body);
 
